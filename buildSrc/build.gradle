@@ -1,6 +1,7 @@
 System.setProperty("java.awt.headless", "true")
 
 repositories {
+    maven { url 'https://maven.google.com/' }
     jcenter()
 }
 

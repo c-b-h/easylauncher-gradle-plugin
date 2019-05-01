@@ -3,6 +3,7 @@ package com.akaita.android.easylauncher.plugin
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.api.ApplicationVariant
 import com.akaita.android.easylauncher.filter.EasyLauncherFilter
+import com.android.builder.model.ProductFlavor
 import com.google.common.collect.Lists
 import groovy.transform.CompileStatic
 import org.gradle.api.NamedDomainObjectContainer
@@ -57,9 +58,7 @@ class EasyLauncherPlugin implements Plugin<Project> {
 
 
             def tasks = new ArrayList<Task>()
-
             android.applicationVariants.all { ApplicationVariant variant ->
-
                 List<EasyLauncherConfig> configs = Lists.newArrayList()
                 ribbonVariants.each{
                     if (variant.name == it.name) {
@@ -68,9 +67,11 @@ class EasyLauncherPlugin implements Plugin<Project> {
                 }
 
                 if (configs.empty) {
-                    ribbonProductFlavors.each {
-                        if (variant.flavorName == it.name) {
-                            configs.add(it)
+                    ribbonProductFlavors.each { EasyLauncherConfig config ->
+                        variant.getProductFlavors().each { ProductFlavor productFlavor ->
+                            if (productFlavor.name == config.name) {
+                                configs.add(config)
+                            }
                         }
                     }
                     ribbonBuildTypes.each {
